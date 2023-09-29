@@ -38,8 +38,8 @@ else
             output)
                 output="$OPTARG"
                 ;;
-            output)
-                output="$OPTARG"
+            pass)
+                pass="$OPTARG"
                 ;;
             \?)
                 echo "Opção inválida: -$OPTARG" >&2
@@ -81,11 +81,14 @@ if [[ "$first_line" =~ $pattern1 ]]; then
     echo "Deseja converter o arquivo de '1 2 3' para '1/2/3' com 'bash tsunami -i $input'? (S/n)"
     read resposta
     if [ -z "$resposta" ] || [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || [ "$resposta" = "y" ] || [ "$resposta" = "Y" ]; then
-        bash tsunami -i "$input"
+        bash tsunami/tsunami -i "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_formatado.txt"
     fi
+
+# Re-lê a primeira linha do arquivo
+first_line=$(head -n 1 "$input")
 
 elif [[ "$first_line" =~ $pattern2 ]]; then
     echo "A primeira linha corresponde ao padrão 1/2/3: $first_line"
@@ -94,12 +97,18 @@ elif [[ "$first_line" =~ $pattern2 ]]; then
     echo "Deseja converter o arquivo de '1/2/3' para comandos telnet com 'bash tsunami -t '$input'_formatado.txt'? (S/n)"
     read resposta
     if [ -z "$resposta" ] || [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || [ "$resposta" = "y" ] || [ "$resposta" = "Y" ]; then
-        bash tsunami -t $input
+        bash tsunami/tsunami -t $input
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_telnet.txt"
     fi
 else
     echo "A primeira linha não corresponde a nenhum padrão: $first_line"
-    expect oxygen/oxygen.expect $ip $user $pass $input | see $output
+    # Pergunta se o usuario deseja executar o oxygen com $input com "expect oxygen/oxygen.expect $ip $user $pass $input | see $output"
+    # Se a resposta for s, S, y, Y ou nada, executa o comando
+    echo "Deseja executar o oxygen com $input com 'expect oxygen/oxygen.expect $ip $user $pass $input | see $output'? (S/n)"
+    read resposta
+    if [ -z "$resposta" ] || [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || [ "$resposta" = "y" ] || [ "$resposta" = "Y" ]; then
+        expect oxygen/oxygen.expect $ip $user $pass $input | see $output
+    fi
 fi
