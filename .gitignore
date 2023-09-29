@@ -6,6 +6,37 @@ __pycache__/
 # C extensions
 *.so
 
+# Tmp, cache files & backups (matches multiple patterns)
+*tmp*
+*cache*
+*backup*
+*bak*
+
+# Images
+*.jpg
+*.jpeg
+*.gif
+*.png
+*.svg
+*.ico
+*.bmp
+*.tif
+*.tiff
+
+# Videos
+*.avi
+*.flv
+*.wmv
+*.mov
+*.mp4
+*.webm
+*.vob
+*.mng
+*.qt
+*.mpg
+*.mpeg
+*.3gp
+
 # Distribution / packaging
 .Python
 build/
