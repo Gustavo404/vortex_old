@@ -1,8 +1,11 @@
 #!/bin/bash
 
 cat banner.txt
+echo # pula uma linha por conta do banner
+echo "Bem vindo ao Vortex"
+echo # pula uma linha para ficar mais bonito
 
-# coleta de dados
+# coleta de dados input output ip user e pass
 echo "Digite o nome do arquivo de entrada: "
 read input
 
@@ -31,7 +34,7 @@ if [ ! -f "$input" ]; then
     exit 1
 fi
 
-# Verifica se o arquivo de entrada possui apenas números e tabs (12 87  3)
+# Verifica se o arquivo de entrada possui apenas números e tabs (X Y Z)
 if [[ "$input" =~ ^[0-9\t]+$ ]]; then
     echo "O arquivo de entrada está no padrão Z Y X"
     echo "Executando o tsunami.sh -i"	
