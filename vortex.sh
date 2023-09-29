@@ -75,12 +75,31 @@ pattern1="^[0-9]+\t[0-9]+\t[0-9]+$"
 pattern2="^[0-9]+/[0-9]+/[0-9]+$"
 
 if [[ "$first_line" =~ $pattern1 ]]; then
-  echo "A primeira linha corresponde ao padrão 1: $first_line"
-  # Ação 1: Coloque aqui o código para a ação 1
+    echo "A primeira linha corresponde ao padrão 1 2 3: $first_line"
+    # Pergunta se o usuario deseja converter o arquivo de "1 2 3" para "1/2/3" com "bash tsunami -i"
+    # Se a resposta for s, S, y, Y ou nada, executa o comando
+    echo "Deseja converter o arquivo de '1 2 3' para '1/2/3' com 'bash tsunami -i $input'? (S/n)"
+    read resposta
+    if [ -z "$resposta" ] || [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || [ "$resposta" = "y" ] || [ "$resposta" = "Y" ]; then
+        bash tsunami -i "$input"
+        input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
+        input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
+        input="${input_sem_extensao}_formatado.txt"
+    fi
+
 elif [[ "$first_line" =~ $pattern2 ]]; then
-  echo "A primeira linha corresponde ao padrão 2: $first_line"
-  # Ação 2: Coloque aqui o código para a ação 2
+    echo "A primeira linha corresponde ao padrão 1/2/3: $first_line"
+    # Pergunta se o usuario deseja converter o arquivo de "1/2/3" para comandos telnet com "bash tsunami -t $input_formatado.txt'"
+    # Se a resposta for s, S, y, Y ou nada, executa o comando
+    echo "Deseja converter o arquivo de '1/2/3' para comandos telnet com 'bash tsunami -t '$input'_formatado.txt'? (S/n)"
+    read resposta
+    if [ -z "$resposta" ] || [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || [ "$resposta" = "y" ] || [ "$resposta" = "Y" ]; then
+        bash tsunami -t $input
+        input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
+        input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
+        input="${input_sem_extensao}_telnet.txt"
+    fi
 else
-  echo "A primeira linha não corresponde a nenhum padrão: $first_line"
-  # Ação 3: Coloque aqui o código para a ação 3
+    echo "A primeira linha não corresponde a nenhum padrão: $first_line"
+    expect oxygen/oxygen.expect $ip $user $pass $input | see $output
 fi
