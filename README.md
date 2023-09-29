@@ -1,6 +1,9 @@
 # Vortex
 Simplifica o gerenciamento e a manipulação de informações coletada por subscripts em um fluxo interno de dados.
 
+## Depedecias
+- expect
+
 ## Subscripts 
 Os subscripts do VORTEX são:
 
