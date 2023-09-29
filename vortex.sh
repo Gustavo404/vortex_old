@@ -49,3 +49,4 @@ else
     echo "O arquivo de entrada possui comandos do telnet"
     echo "Executando o oxygen.expect"
     bash oxygen/oxygen.expect $ip $user $pass $input $output | see $output
+fi
