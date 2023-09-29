@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 install() {
     echo "Instalando..."
@@ -10,10 +10,10 @@ install() {
     git clone https://github.com/Gustavo404/tsunami
 }
 
-reistall() {
+reinstall() {
     echo "Re-instalando..."
     rm -rf obsidian oxygen tsunami
-    install()
+    install
 }
 
 while getopts "ir" opt; do
@@ -22,7 +22,7 @@ while getopts "ir" opt; do
       install
       ;;
     r)
-      reistall
+      reinstall
       ;;
     \?)
       echo "Uso: $0 [-i] [-r]" >&2
