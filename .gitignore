@@ -12,6 +12,10 @@ __pycache__/
 *backup*
 *bak*
 
+# Directories
+tsunami/
+obsidian/
+oxygen/
 
 # Images
 *.jpg
