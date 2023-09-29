@@ -3,6 +3,7 @@ Simplifica o gerenciamento e a manipulação de informações coletada por subsc
 
 ## Depedecias
 - expect
+- outros scripts
 
 ## Subscripts 
 Os subscripts do VORTEX são:
