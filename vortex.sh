@@ -1,46 +1,23 @@
 #!/bin/bash
 
-cat banner.txt
-echo # pula uma linha por conta do banner
-echo "Bem vindo ao Vortex"
-echo # pula uma linha para ficar mais bonito
+# Função para coletar dados de entrada do usuário
+coletar_dados() {
+    read -p "Digite o nome do arquivo de entrada: " input
+    read -p "Digite o nome do arquivo de saída: " output
+    read -p "Digite o IP do servidor Telnet: " ip
+    read -p "Digite o usuário do servidor Telnet: " user
+    read -p "Digite a senha do servidor Telnet: " pass
+}
 
-# Verifica se foram fornecidos argumentos de linha de comando
-if [ $# -eq 0 ]; then
-    # coleta de dados input output ip user e pass
-    echo "Digite o nome do arquivo de entrada: "
-    read input
-
-    echo "Digite o nome do arquivo de saida: "
-    read output
-
-    echo "Digite o ip do servidor telnet: "
-    read ip
-
-    echo "Digite o usuario do servidor telnet: "
-    read user
-
-    echo "Digite a senha do servidor telnet: "
-    read pass
-else
-    # Processa as opções da linha de comando
-    while getopts "ip:user:pass:input:output:" opt; do
+# Função para processar as opções da linha de comando
+processar_opcoes() {
+    while getopts "i:u:p:s:o:" opt; do
         case $opt in
-            ip)
-                ip="$OPTARG"
-                ;;
-            user)
-                user="$OPTARG"
-                ;;
-            input)
-                input="$OPTARG"
-                ;;
-            output)
-                output="$OPTARG"
-                ;;
-            pass)
-                pass="$OPTARG"
-                ;;
+            s) ip="$OPTARG" ;;
+            u) user="$OPTARG" ;;
+            i) input="$OPTARG" ;;
+            o) output="$OPTARG" ;;
+            p) pass="$OPTARG" ;;
             \?)
                 echo "Opção inválida: -$OPTARG" >&2
                 exit 1
@@ -51,64 +28,101 @@ else
                 ;;
         esac
     done
-fi
-# verifica se todas as variaveis foram preenchidas
-if [ -z "$input" ] || [ -z "$output" ] || [ -z "$ip" ] || [ -z "$user" ] || [ -z "$pass" ]
-then
-    echo "Alguma variavel nao foi preenchida"
-    exit 1
-fi
+}
 
-# Verifica se o arquivo de entrada existe
-if [ ! -f "$input" ]; then
-    echo "O arquivo de entrada não existe"
-    exit 1
-fi
+# Função para verificar se todas as variáveis foram preenchidas
+verificar_variaveis() {
+    if [[ -z "$input" || -z "$output" || -z "$ip" || -z "$user" || -z "$pass" ]]; then
+        echo "Alguma variável não foi preenchida"
+        exit 1
+    fi
+}
 
-# Lê a primeira linha do arquivo
-first_line=$(head -n 1 "$input")
+# Função para verificar o padrão da primeira linha do arquivo
+verificar_padrao() {
+    local first_line=$(head -n 1 "$input")
 
-# Expressão regular para verificar o padrão "Números Tab Números Tab Números"
-pattern1="^[0-9]+\t[0-9]+\t[0-9]+$"
+    if [[ "$first_line" =~ ^[0-9]+\t[0-9]+\t[0-9]+$ ]]; then
+        echo "A primeira linha corresponde ao padrão 1 2 3: $first_line"
+        converter_arquivo
+    elif [[ "$first_line" =~ ^[0-9]+/[0-9]+/[0-9]+$ ]]; then
+        echo "A primeira linha corresponde ao padrão 1/2/3: $first_line"
+        converter_arquivo_telnet
+    else
+        echo "A primeira linha não corresponde a nenhum padrão: $first_line"
+        executar_oxygen
+    fi
+}
 
-# Expressão regular para verificar o padrão "Números/Números/Números"
-pattern2="^[0-9]+/[0-9]+/[0-9]+$"
-
-if [[ "$first_line" =~ $pattern1 ]]; then
-    echo "A primeira linha corresponde ao padrão 1 2 3: $first_line"
-    # Pergunta se o usuario deseja converter o arquivo de "1 2 3" para "1/2/3" com "bash tsunami -i"
-    # Se a resposta for s, S, y, Y ou nada, executa o comando
-    echo "Deseja converter o arquivo de '1 2 3' para '1/2/3' com 'bash tsunami -i $input'? (S/n)"
-    read resposta
-    if [ -z "$resposta" ] || [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || [ "$resposta" = "y" ] || [ "$resposta" = "Y" ]; then
+# Função para converter o arquivo de "1 2 3" para "1/2/3"
+converter_arquivo() {
+    read -p "Deseja converter o arquivo de '1 2 3' para '1/2/3'? (S/n) " resposta
+    if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
         bash tsunami/tsunami -i "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_formatado.txt"
     fi
+}
 
-# Re-lê a primeira linha do arquivo
-first_line=$(head -n 1 "$input")
-
-elif [[ "$first_line" =~ $pattern2 ]]; then
-    echo "A primeira linha corresponde ao padrão 1/2/3: $first_line"
-    # Pergunta se o usuario deseja converter o arquivo de "1/2/3" para comandos telnet com "bash tsunami -t $input_formatado.txt'"
-    # Se a resposta for s, S, y, Y ou nada, executa o comando
-    echo "Deseja converter o arquivo de '1/2/3' para comandos telnet com 'bash tsunami -t '$input'_formatado.txt'? (S/n)"
-    read resposta
-    if [ -z "$resposta" ] || [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || [ "$resposta" = "y" ] || [ "$resposta" = "Y" ]; then
-        bash tsunami/tsunami -t $input
+# Função para converter o arquivo de "1/2/3" para comandos Telnet
+converter_arquivo_telnet() {
+    read -p "Deseja converter o arquivo de '1/2/3' para comandos Telnet? (S/n) " resposta
+    if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
+        bash tsunami/tsunami -t "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_telnet.txt"
     fi
-else
-    echo "A primeira linha não corresponde a nenhum padrão: $first_line"
-    # Pergunta se o usuario deseja executar o oxygen com $input com "expect oxygen/oxygen.expect $ip $user $pass $input | see $output"
-    # Se a resposta for s, S, y, Y ou nada, executa o comando
-    echo "Deseja executar o oxygen com $input com 'expect oxygen/oxygen.expect $ip $user $pass $input | see $output'? (S/n)"
-    read resposta
-    if [ -z "$resposta" ] || [ "$resposta" = "s" ] || [ "$resposta" = "S" ] || [ "$resposta" = "y" ] || [ "$resposta" = "Y" ]; then
-        expect oxygen/oxygen.expect $ip $user $pass $input | see $output
+}
+
+# Função para executar o Oxygen
+executar_oxygen() {
+    read -p "Deseja executar o Oxygen? (S/n) " resposta
+    if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
+        expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | see "$output"
     fi
+}
+
+# Função para filtrar os dados com Obsidian e Tsunami
+filtrar_dados() {
+    echo "Iniciando filtragem dos dados com Obsidian e Tsunami"
+    bash tsunami/tsunami -s "$output"
+}
+
+# Função para filtrar os dados com Obsidian
+filtrar_dados_obsidian() {
+    read -p "Deseja filtrar os dados com Obsidian? (S/n) " resposta
+    if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
+        echo "Copie as 3 colunas da planilha e cole num arquivo de texto (você precisará informar o nome do arquivo!)"
+        for i in {5..1}; do
+            echo -ne "Você poderá prosseguir em $i segundos\r"
+            sleep 1
+        done
+        echo "pressione enter para continuar"
+        read
+        bash obsidian/obsidian.sh
+    fi
+}
+
+# Coleta de dados
+if [[ $# -eq 0 ]]; then
+    coletar_dados
+else
+    processar_opcoes "$@"
 fi
+
+# Verificação de variáveis
+verificar_variaveis
+
+# Verificação de padrão
+verificar_padrao
+
+# Filtragem de dados
+filtrar_dados
+
+# Filtragem de dados com Obsidian
+filtrar_dados_obsidian
+
+# Finalização do script
+echo "Script finalizado"
