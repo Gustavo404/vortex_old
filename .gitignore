@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # Tmp, cache files & backups (matches multiple patterns)
-*tmp*
+*.tmp*
 *cache*
 *backup*
 *bak*

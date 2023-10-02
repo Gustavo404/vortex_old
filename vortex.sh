@@ -131,3 +131,5 @@ filtrar_dados_obsidian
 
 # Finalização do script
 echo "Script finalizado"
+
+exit 0
