@@ -140,14 +140,17 @@ filtrar_dados_obsidian() {
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
         clear
         echo
+        output_sem_extensao=$(basename "$output" | cut -f 1 -d '_')
+        output_sem_extensao=$(basename "$output_sem_extensao" | cut -f 1 -d '.')
         color_message "yellow" "[!] Abra a planilha da OLT e apague as colunas 'PLACA PON e ONU (2,3 e 4)'"
         sleep 0.2
-        color_message "yellow" "[!] Copie \e[0m'$input'_formatado\e[93m e cole na \e[91msegunda\e[93m coluna da planilha."
+        color_message "yellow" "[!] Copie \e[0m"$input_sem_extensao"_formatado.txt\e[93m e cole na \e[91msegunda\e[93m coluna da planilha."
         sleep 0.2
-        color_message "yellow" "[!] Copie \e[0m'$output'_sinal.txt\e[93m e cole na \e[91mterceira\e[93m coluna da planilha."
+        color_message "yellow" "[!] Copie \e[0m"$output_sem_extensao"_sinal.txt\e[93m e cole na \e[91mterceira\e[93m coluna da planilha."
         sleep 0.2
+        echo
         color_message "red" "[!] ATENÇÃO: verifique se todas as colunas possuem o mesmo número de linhas!"
-        sleep 0.2
+        sleep 0.4
         color_message "yellow" "[!] Copie as 3 colunas da planilha e cole num arquivo de texto"
         color_message "yellow" "    (você precisará informar o nome do arquivo!)"
         echo
@@ -172,7 +175,7 @@ fi
 # Verificação de variáveis
 verificar_variaveis
 
-# Conversão de quebra de linha para Unix
+# Conversão de quebra de linha para Unix + debug
 dos2unix "$input"
 echo
 
