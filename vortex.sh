@@ -57,7 +57,7 @@ verificar_padrao() {
 converter_arquivo() {
     read -p "Deseja converter o arquivo de '1 2 3' para '1/2/3'? (S/n) " resposta
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
-        bash tsunami/tsunami -i "$input"
+        bash tsunami/tsunami.sh -i "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_formatado.txt"
@@ -68,7 +68,7 @@ converter_arquivo() {
 converter_arquivo_telnet() {
     read -p "Deseja converter o arquivo de '1/2/3' para comandos Telnet? (S/n) " resposta
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
-        bash tsunami/tsunami -t "$input"
+        bash tsunami/tsunami.sh -t "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_telnet.txt"
@@ -86,7 +86,7 @@ executar_oxygen() {
 # Função para filtrar os dados com Obsidian e Tsunami
 filtrar_dados() {
     echo "Iniciando filtragem dos dados com Obsidian e Tsunami"
-    bash tsunami/tsunami -s "$output"
+    bash tsunami/tsunamish -s "$output"
 }
 
 # Função para filtrar os dados com Obsidian
