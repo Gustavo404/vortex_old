@@ -40,17 +40,16 @@ verificar_variaveis() {
 
 # Função para verificar o padrão da primeira linha do arquivo
 verificar_padrao() {
+    # Lê a primeira linha do arquivo de entrada
     local first_line=$(head -n 1 "$input")
 
-    if [[ "$first_line" =~ ^[0-9]+\t[0-9]+\t[0-9]+$ ]]; then
-        echo "A primeira linha corresponde ao padrão 1 2 3: $first_line"
-        converter_arquivo
-    elif [[ "$first_line" =~ ^[0-9]+/[0-9]+/[0-9]+$ ]]; then
-        echo "A primeira linha corresponde ao padrão 1/2/3: $first_line"
-        converter_arquivo_telnet
+    # Verifica se a primeira linha corresponde a um dos padrões usando o comando grep
+    if echo "$first_line" | grep -Eq '^[0-9]+\t[0-9]+\t[0-9]+$'; then
+        echo "A primeira linha está no padrão 1: $first_line"
+    elif echo "$first_line" | grep -Eq '^[0-9]+\/[0-9]+\/[0-9]+$'; then
+        echo "A primeira linha está no padrão 2: $first_line"
     else
-        echo "A primeira linha não corresponde a nenhum padrão: $first_line"
-        executar_oxygen
+        echo "A primeira linha é inválida: $first_line"
     fi
 }
 
