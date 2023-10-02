@@ -44,12 +44,15 @@ verificar_padrao() {
     local first_line=$(head -n 1 "$input")
 
     # Verifica se a primeira linha corresponde a um dos padrões usando o comando grep
-    if echo "$first_line" | grep -Eq '^[0-9]+\t[0-9]+\t[0-9]+$'; then
+    if echo "$first_line" | grep -E '^[0-9]+\s+[0-9]+\s+[0-9]+$'; then
         echo "A primeira linha está no padrão 1: $first_line"
-    elif echo "$first_line" | grep -Eq '^[0-9]+\/[0-9]+\/[0-9]+$'; then
+        converter_arquivo
+    elif echo "$first_line" | grep -E '^[0-9]+\/[0-9]+\/[0-9]+$'; then
         echo "A primeira linha está no padrão 2: $first_line"
+        converter_arquivo_telnet
     else
         echo "A primeira linha é inválida: $first_line"
+        executar_oxygen
     fi
 }
 
@@ -86,7 +89,7 @@ executar_oxygen() {
 # Função para filtrar os dados com Obsidian e Tsunami
 filtrar_dados() {
     echo "Iniciando filtragem dos dados com Obsidian e Tsunami"
-    bash tsunami/tsunamish -s "$output"
+    bash tsunami/tsunami.sh -s "$output"
 }
 
 # Função para filtrar os dados com Obsidian
