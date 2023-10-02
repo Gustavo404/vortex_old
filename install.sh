@@ -3,12 +3,13 @@
 # Função para instalar as dependências do projeto
 instalar_dependencias() {
   echo "Instalando dependências..."
-  apt install expect git -y
+  apt install expect git dos2unix -y
   # apt install python3-pip -y
   # clona os repositórios do GitHub que fazem parte do projeto (dependências)
   git clone https://github.com/Gustavo404/obsidian
   git clone https://github.com/Gustavo404/oxygen
   git clone https://github.com/Gustavo404/tsunami
+  dos2unix *
 }
 
 # Função para reinstalar as dependências do projeto
