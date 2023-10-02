@@ -1,5 +1,11 @@
 # Vortex
-Simplifica o gerenciamento e a manipulação de informações coletada por subscripts em um fluxo interno de dados.
+
+[![AWK 1.3.4](https://img.shields.io/badge/AWK-1.3.4-red)](https://packages.debian.org/stable/awk) 
+[![ShellScript Bash](https://img.shields.io/badge/ShellScript-Bash-blue)](https://www.gnu.org/software/bash/)
+[![Licença](https://img.shields.io/badge/Licen%C3%A7a-GPL%202.0-yellow)](https://github.com/gustavo404/obsidian/blob/main/LICENSE)
+[![Youtube](https://img.shields.io/badge/Youtube-Gustavo404-red.svg)](https://youtube.com/gustavo404)
+
+<img src="vortex.jpg" alt="Vortex Logo" width="520">
 
 ## Depedecias
 - expect
