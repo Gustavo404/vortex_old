@@ -47,13 +47,15 @@ verificar_padrao() {
     if echo "$first_line" | grep -E '^[0-9]+\s+[0-9]+\s+[0-9]+$'; then
         echo "A primeira linha está no padrão 1: $first_line"
         converter_arquivo
-    elif echo "$first_line" | grep -E '^[0-9]+\/[0-9]+\/[0-9]+$'; then
+        local first_line=$(head -n 1 "$input")
+    fi
+    if echo "$first_line" | grep -E '^[0-9]+\/[0-9]+\/[0-9]+$'; then
         echo "A primeira linha está no padrão 2: $first_line"
         converter_arquivo_telnet
-    else
-        echo "A primeira linha é inválida: $first_line"
-        executar_oxygen
+        local first_line=$(head -n 1 "$input")
     fi
+        echo "deseja executar o oxygen para: $first_line"
+        executar_oxygen
 }
 
 # Função para converter o arquivo de "1 2 3" para "1/2/3"
@@ -82,7 +84,8 @@ converter_arquivo_telnet() {
 executar_oxygen() {
     read -p "Deseja executar o Oxygen? (S/n) " resposta
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
-        expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | tee "$output"
+        expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | tee output.tmp
+        grep -E 'RECV POWER   :|onu is in unactive!|\[ ERR ' output.tmp > "$output"
     fi
 }
 
