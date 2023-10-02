@@ -1,12 +1,40 @@
 #!/bin/bash
 
+# Função para mostrar mensagens coloridas
+function color_message() {
+  local color=$1
+  local message=$2
+  case $color in
+    "red")
+      echo -e "\e[91m$message\e[0m"
+      ;;
+    "green")
+      echo -e "\e[92m$message\e[0m"
+      ;;
+    "blue")
+      echo -e "\e[94m$message\e[0m"
+      ;;
+    "yellow")
+      echo -e "\e[93m$message\e[0m"
+      ;;
+    *)
+      echo "$message"
+      ;;
+  esac
+}
+
 # Função para coletar dados de entrada do usuário
 coletar_dados() {
-    read -p "Digite o nome do arquivo de entrada: " input
-    read -p "Digite o nome do arquivo de saída: " output
-    read -p "Digite o IP do servidor Telnet: " ip
-    read -p "Digite o usuário do servidor Telnet: " user
-    read -p "Digite a senha do servidor Telnet: " pass
+    color_message "yellow" "[?] Digite o nome do arquivo de entrada: "
+    read input
+    color_message "yellow" "[?] Digite o nome do arquivo de saída: "
+    read output
+    color_message "yellow" "[?] Digite o IP do servidor Telnet: "
+    read ip
+    color_message "yellow" "[?] Digite o usuário do servidor Telnet: "
+    read user
+    color_message "yellow" "[?] Digite a senha do servidor Telnet: "
+    read pass
 }
 
 # Função para processar as opções da linha de comando
@@ -19,11 +47,11 @@ processar_opcoes() {
             o) output="$OPTARG" ;;
             p) pass="$OPTARG" ;;
             \?)
-                echo "Opção inválida: -$OPTARG" >&2
+                color_message "red" "[!] Opção inválida: -$OPTARG" >&2
                 exit 1
                 ;;
             :)
-                echo "A opção -$OPTARG requer um argumento." >&2
+                color_message "red" "[!] A opção -$OPTARG requer um argumento." >&2
                 exit 1
                 ;;
         esac
@@ -33,7 +61,7 @@ processar_opcoes() {
 # Função para verificar se todas as variáveis foram preenchidas
 verificar_variaveis() {
     if [[ -z "$input" || -z "$output" || -z "$ip" || -z "$user" || -z "$pass" ]]; then
-        echo "Alguma variável não foi preenchida"
+        color_message "red" "[!] Alguma variável não foi preenchida"
         exit 1
     fi
 }
@@ -45,66 +73,90 @@ verificar_padrao() {
 
     # Verifica se a primeira linha corresponde a um dos padrões usando o comando grep
     if echo "$first_line" | grep -E '^[0-9]+\s+[0-9]+\s+[0-9]+$'; then
-        echo "A primeira linha está no padrão 1: $first_line"
+        echo
+        color_message "blue" "[!] O arquivo $input está no padrão '1 2 3': $first_line"
         converter_arquivo
         local first_line=$(head -n 1 "$input")
     fi
     if echo "$first_line" | grep -E '^[0-9]+\/[0-9]+\/[0-9]+$'; then
-        echo "A primeira linha está no padrão 2: $first_line"
+        echo
+        color_message "blue" "[!] O arquivo $input está no padrão '1/2/3': $first_line"
         converter_arquivo_telnet
         local first_line=$(head -n 1 "$input")
     fi
-        echo "deseja executar o oxygen para: $first_line"
-        executar_oxygen
+        color_message "yellow" "[?] Deseja executar o Oxygen para: $first_line? (S/n)"
+        read resposta
+        if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
+            executar_oxygen
+        fi
 }
 
 # Função para converter o arquivo de "1 2 3" para "1/2/3"
 converter_arquivo() {
-    read -p "Deseja converter o arquivo de '1 2 3' para '1/2/3'? (S/n) " resposta
+    color_message "yellow" "[?] Deseja converter $input de '1 2 3' para '1/2/3'? (S/n)"
+    read resposta
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
         bash tsunami/tsunami.sh -i "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_formatado.txt"
+        echo
     fi
 }
 
 # Função para converter o arquivo de "1/2/3" para comandos Telnet
 converter_arquivo_telnet() {
-    read -p "Deseja converter o arquivo de '1/2/3' para comandos Telnet? (S/n) " resposta
+    color_message "yellow" "[?] Deseja converter $input de '1/2/3' para comandos Telnet? (S/n)"
+    read resposta
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
         bash tsunami/tsunami.sh -t "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_telnet.txt"
+        echo
     fi
 }
 
 # Função para executar o Oxygen
 executar_oxygen() {
-    read -p "Deseja executar o Oxygen? (S/n) " resposta
-    if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
-        expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | tee output.tmp
-        grep -E 'RECV POWER   :|onu is in unactive!|\[ ERR ' output.tmp > "$output"
-    fi
+    expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | tee output.tmp
+    grep -E 'RECV POWER   :|onu is in unactive!|\[ ERR ' output.tmp > "$output"
+    echo
+    color_message "green" "Oxygen executado com sucesso"
+    echo
 }
 
 # Função para filtrar os dados com Obsidian e Tsunami
 filtrar_dados() {
-    echo "Iniciando filtragem dos dados com Obsidian e Tsunami"
+    color_message "yellow" "[!] Iniciando filtragem dos dados com Obsidian e Tsunami"
     bash tsunami/tsunami.sh -s "$output"
+    echo
 }
 
 # Função para filtrar os dados com Obsidian
 filtrar_dados_obsidian() {
-    read -p "Deseja filtrar os dados com Obsidian? (S/n) " resposta
+    color_message "yellow" "[?] Deseja filtrar os dados com Obsidian? (S/n)"
+    read resposta
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
-        echo "Copie as 3 colunas da planilha e cole num arquivo de texto (você precisará informar o nome do arquivo!)"
-        for i in {5..1}; do
+        clear
+        echo
+        color_message "yellow" "[!] Abra a planilha da OLT e apague as colunas 'PLACA PON e ONU (2,3 e 4)'"
+        sleep 0.2
+        color_message "yellow" "[!] Copie \e[0m'$input'_formatado\e[93m e cole na \e[91msegunda\e[93m coluna da planilha."
+        sleep 0.2
+        color_message "yellow" "[!] Copie \e[0m'$output'_sinal.txt\e[93m e cole na \e[91mterceira\e[93m coluna da planilha."
+        sleep 0.2
+        color_message "red" "[!] ATENÇÃO: verifique se todas as colunas possuem o mesmo número de linhas!"
+        sleep 0.2
+        color_message "yellow" "[!] Copie as 3 colunas da planilha e cole num arquivo de texto"
+        color_message "yellow" "    (você precisará informar o nome do arquivo!)"
+        echo
+        for i in {5..0}; do
             echo -ne "Você poderá prosseguir em $i segundos\r"
             sleep 1
         done
-        echo "pressione enter para continuar"
+        echo && echo
+        color_message "green" "[!] pressione enter para continuar"
         read
         bash obsidian/obsidian.sh
     fi
@@ -120,16 +172,33 @@ fi
 # Verificação de variáveis
 verificar_variaveis
 
+# Conversão de quebra de linha para Unix
+dos2unix "$input"
+echo
+
 # Verificação de padrão
 verificar_padrao
 
 # Filtragem de dados
 filtrar_dados
 
+# Limpeza do diretório
+color_message "yellow" "[?] Deseja limpar o diretório? (S/n)"
+read resposta
+if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
+    rm $input output.tmp
+    else
+    color_message "yellow" "[!] Arquivos não apagados..."
+fi
+echo
+
 # Filtragem de dados com Obsidian
 filtrar_dados_obsidian
 
 # Finalização do script
-echo "Script finalizado"
+color_message "yellow" "[!] Finalizando..."
+rm $output
+mv '$output'_sinal.txt $output
+color_message "green" "Script finalizado"
 
 exit 0
