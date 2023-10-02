@@ -80,7 +80,7 @@ converter_arquivo_telnet() {
 executar_oxygen() {
     read -p "Deseja executar o Oxygen? (S/n) " resposta
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
-        expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | see "$output"
+        expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | tee "$output"
     fi
 }
 
