@@ -172,11 +172,15 @@ else
     processar_opcoes "$@"
 fi
 
+
 # Verificação de variáveis
+clear
 verificar_variaveis
 
+# Banner
+cat .banner && echo
+
 # Conversão de quebra de linha para Unix + debug
-clear
 color_message "yellow" "[!] Convertendo quebra de linha para Unix..."
 dos2unix "$input"
 echo
