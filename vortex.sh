@@ -176,6 +176,8 @@ fi
 verificar_variaveis
 
 # Conversão de quebra de linha para Unix + debug
+clear
+color_message "yellow" "[!] Convertendo quebra de linha para Unix..."
 dos2unix "$input"
 echo
 
