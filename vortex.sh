@@ -128,7 +128,7 @@ executar_oxygen() {
 
 # Função para filtrar os dados com Obsidian e Tsunami
 filtrar_dados() {
-    color_message "yellow" "[!] Iniciando filtragem dos dados com Obsidian e Tsunami"
+    color_message "yellow" "[!] Iniciando formatação dos dados com Tsunami"
     bash tsunami/tsunami.sh -s "$input_sem_extensao"_recv.txt
     echo
 }
@@ -202,6 +202,6 @@ filtrar_dados_obsidian
 # Finalização do script
 echo
 color_message "yellow" "[!] Finalizando..."
-color_message "green" "Script finalizado"
+color_message "green" "[.]Script finalizado"
 
 exit 0
