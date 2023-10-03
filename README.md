@@ -100,3 +100,31 @@ As seguintes dependências são necessárias para executar os scripts:
 - **Expect:** É uma ferramenta que automatiza interações com programas de linha de comando, o que é essencial para a comunicação com o servidor Telnet.
 - **Git:** É um sistema de controle de versão usado para clonar repositórios do GitHub.
 - **dos2unix:** É uma ferramenta que converte quebras de linha de arquivos, garantindo a consistência dos formatos de arquivo.
+
+## Feedback, Perguntas e Relatórios de Problemas
+
+Se quiser contribuir para a melhoria do projeto Vortex, sugestões, perguntas ou encontrar algum problema, estou aqui para ajudar.
+
+### Sugestões e Melhorias
+
+Se você tiver sugestões ou ideias para melhorar o projeto Vortex, sinta-se à vontade para compartilhá-las. Você pode fazer isso das seguintes maneiras:
+
+- **Pull Request (PR)**: Se você deseja contribuir diretamente com código, abra um Pull Request com suas alterações propostas. Analisaremos suas contribuições e trabalharemos juntos para incorporá-las ao projeto.
+- **Issues**: Use as Issues para sugerir melhorias ou novos recursos. Descreva detalhadamente sua ideia para que eu possa entender e discutir como implementá-la.
+
+### Relatórios de Problemas (Bugs)
+
+Encontrou um bug ou problema em Vortex? Você pode relatar problemas das seguintes maneiras:
+
+- **Issues**: Abra uma Issue descrevendo o problema. Inclua informações relevantes, como o ambiente em que o erro ocorreu, etapas para reproduzi-lo e qualquer mensagem de erro que tenha recebido.
+- **Site**: Você também pode reportar bugs em [gustavo404.com/sobre](https://www.gustavo404.com/sobre). Use os meios de contato para enviar detalhes sobre o problema encontrado.
+
+### Perguntas e Suporte
+
+Se você tiver alguma pergunta sobre como usar Vortex ou precisar de suporte, Você pode fazer o seguinte:
+
+- **Issues Existentes**: Verifique se já existe uma Issue relacionada à sua pergunta. Talvez a resposta que você procura já esteja lá.
+- **Novas Issues**: Se sua pergunta não estiver coberta nas Issues existentes, sinta-se à vontade para criar uma nova Issue com sua pergunta. Ficarei feliz em responder e ajudar.
+- **Contato pelo Site**: Você também pode entrar em contato conosco através do site [gustavo404.com/sobre](https://www.gustavo404.com/sobre). Utilize os meios de contato para enviar suas perguntas ou dúvidas.
+
+Agradeço por sua contribuição, feedback e envolvimento na comunidade do projeto Vortex.
