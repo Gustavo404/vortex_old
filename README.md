@@ -7,6 +7,8 @@
 
 <img src=".vortex.jpg" alt="Vortex Logo" width="520">
 
+# Visão Geral
+
 O **Projeto VORTEX** foi construído a partir de subscripts que foram criados antes mesmo da ideia do projeto existir. Esses subscripts eram responsáveis por automatizar processos de tratamento de dados. No entanto, quando o desenvolvedor precisou realizar uma coleta de dados, ele criou o script chamado Oxygen. O Oxygen é um controlador de telnet baseado em expect, que se conecta às OLTs via telnet e coleta informações, principalmente relacionadas a ONTs e ONUs.
 
 Antes do VORTEX, já existiam vários outros subscripts criados pelo mesmo desenvolvedor para tratar os dados coletados. No entanto, com a criação do script de coleta de dados, foi possível criar um fluxo interno de dados, unindo todos os subscripts e utilizando um script principal para gerenciar esse fluxo. Foi assim que o VORTEX nasceu.
@@ -19,13 +21,13 @@ Os subscripts do VORTEX são:
 
 Além dos subscripts mencionados, existem também os **pseudo-códigos** (assim são chamados), que realizam funções específicas, sem uma qualificação, filtro ou escopo definido. Esses pseudo-códigos podem ser encontrados no meio do código, fora dos outros scripts, e são pequenos demais para terem um nome ou arquivo próprio.
 
-### **Documentação do Script `install.sh`**
+## **Documentação do Script `install.sh`**
 
-**Descrição:**
+### Descrição:
 
 O script **`install.sh`** é responsável por facilitar a instalação e reinstalação das dependências necessárias para o projeto Vortex. Além disso, ele clona os repositórios do GitHub relacionados aos scripts de coleta e formatação de dados. Este script é executado durante a configuração inicial do projeto.
 
-**Funções Destacadas:**
+### Funções Destacadas:
 
 1. **`instalar_dependencias`**
     - Instala as dependências essenciais, como Expect, Git e dos2unix.
@@ -35,7 +37,7 @@ O script **`install.sh`** é responsável por facilitar a instalação e reinsta
     - Remove os repositórios já existentes.
     - Executa a função **`instalar_dependencias`** para reinstalar todas as dependências.
 
-**Uso do Script:**
+### Uso do Script:
 
 Para executar o script **`install.sh`**, utilize o seguinte comando:
 
@@ -46,13 +48,13 @@ sudo bash install.sh [-i] ou [-r]
 - **`i`**: Instala todas as dependências e realiza o clone dos repositórios.
 - **`r`**: Reinstala todas as dependências, removendo os repositórios existentes.
 
-### **Documentação do Script `vortex.sh`**
+## **Documentação do Script `vortex.sh`**
 
-**Descrição:**
+### Descrição:
 
 O script **`vortex.sh`** é o ponto central do projeto Vortex. Ele coleta dados do usuário, processa opções da linha de comando e executa outras funções relacionadas à coleta, formatação e análise de dados.
 
-**Funções Destacadas:**
+### Funções Destacadas:
 
 1. **`coletar_dados`**
     - Solicita ao usuário informações como nome do arquivo de entrada, nome do arquivo de saída, IP do servidor Telnet, usuário e senha.
@@ -69,7 +71,7 @@ O script **`vortex.sh`** é o ponto central do projeto Vortex. Ele coleta dados 
 7. **`filtrar_dados_obsidian`**
     - Oferece a opção de utilizar o script Obsidian para filtrar ainda mais os dados, conforme necessário.
 
-**Uso do Script:**
+### Uso do Script:
 
 Para executar o script **`vortex.sh`**, utilize o seguinte comando:
 
@@ -91,7 +93,7 @@ bash vortex.sh -i dados.txt -u meuusuario -p minhasenha -s 10.10.100.0 -o result
 
 Este comando executará o script **`vortex.sh`** com as opções fornecidas para coletar, processar e filtrar dados. Certifique-se de que todas as variáveis essenciais foram preenchidas corretamente.
 
-### **Dependências**
+# **Dependências**
 
 As seguintes dependências são necessárias para executar os scripts:
 
