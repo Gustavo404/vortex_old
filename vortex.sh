@@ -129,7 +129,7 @@ executar_oxygen() {
 # Função para filtrar os dados com Obsidian e Tsunami
 filtrar_dados() {
     color_message "yellow" "[!] Iniciando filtragem dos dados com Obsidian e Tsunami"
-    bash tsunami/tsunami.sh -s "$output"
+    bash tsunami/tsunami.sh -s "$input_sem_extensao"_recv.txt
     echo
 }
 
@@ -185,13 +185,23 @@ verificar_padrao
 # Filtragem de dados
 filtrar_dados
 
+# Função de limpar o diretório
+color_message "yellow" "[?] Deseja apagar os arquivos 'recv' e 'comandos'? (S/n)"
+read resposta
+if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
+    # rm "$input_sem_extensao"_telnet.txt
+    rm "$input_sem_extensao"_recv.txt
+    # rm "$input_sem_extensao"_formatado.txt
+    rm "$input_sem_extensao"_comandos.txt
+    # rm "$input_sem_extensao"_sinal.txt
+fi
+
 # Filtragem de dados com Obsidian
 filtrar_dados_obsidian
 
 # Finalização do script
+echo
 color_message "yellow" "[!] Finalizando..."
-rm $output
-mv '$output'_sinal.txt $output
 color_message "green" "Script finalizado"
 
 exit 0
