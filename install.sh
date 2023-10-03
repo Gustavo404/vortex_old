@@ -62,6 +62,13 @@ reinstalar_dependencias() {
   instalar_dependencias
 }
 
+# Função para verificar se o usuario é root
+if [[ $EUID -ne 0 ]]; then
+  color_message "red" "Este script deve ser executado como root!"
+  color_message "red" "Execute o comando 'sudo bash install.sh [-i] ou [-r]' para executar o script como root."
+  exit 1
+fi
+
 # Processamento das opções da linha de comando
 while getopts "ir" opt; do
   case "$opt" in

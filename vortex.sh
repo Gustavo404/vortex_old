@@ -112,15 +112,15 @@ converter_arquivo_telnet() {
         bash tsunami/tsunami.sh -t "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
-        input="${input_sem_extensao}_telnet.txt"
+        input="${input_sem_extensao}_comandos.txt"
         echo
     fi
 }
 
 # Função para executar o Oxygen
 executar_oxygen() {
-    expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | tee output.tmp
-    grep -E 'RECV POWER   :|onu is in unactive!|\[ ERR ' output.tmp > "$output"
+    expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | tee "$input_sem_extensao"_telnet.txt
+    grep -E 'RECV POWER   :|onu is in unactive!|\[ ERR ' "$input_sem_extensao"_telnet.txt > "$input_sem_extensao"_recv.txt
     echo
     color_message "green" "Oxygen executado com sucesso"
     echo
@@ -184,16 +184,6 @@ verificar_padrao
 
 # Filtragem de dados
 filtrar_dados
-
-# Limpeza do diretório
-color_message "yellow" "[?] Deseja limpar o diretório? (S/n)"
-read resposta
-if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
-    rm $input output.tmp
-    else
-    color_message "yellow" "[!] Arquivos não apagados..."
-fi
-echo
 
 # Filtragem de dados com Obsidian
 filtrar_dados_obsidian
