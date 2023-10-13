@@ -11,9 +11,9 @@
 
 # Visão Geral
 
-O **Projeto VORTEX** foi construído a partir de subscripts que foram criados antes mesmo da ideia do projeto existir. Esses subscripts eram responsáveis por automatizar processos de tratamento de dados. No entanto, quando o desenvolvedor precisou realizar uma coleta de dados, ele criou o script chamado Oxygen. O Oxygen é um controlador de telnet baseado em expect, que se conecta às OLTs via telnet e coleta informações, principalmente relacionadas a ONTs e ONUs.
+O **Projeto VORTEX** foi construído a partir de subscripts que foram criados antes mesmo da ideia do projeto existir. Esses subscripts eram responsáveis por automatizar processos de tratamento de dados. No entanto, quando o desenvolvedor precisou realizar uma coleta de dados, nasceu um script chamado Oxygen. O Oxygen é um controlador de telnet baseado em expect, que se conecta às OLTs via telnet e coleta informações, principalmente relacionadas a ONTs e ONUs.
 
-Antes do VORTEX, já existiam vários outros subscripts criados pelo mesmo desenvolvedor para tratar os dados coletados. No entanto, com a criação do script de coleta de dados, foi possível criar um fluxo interno de dados, unindo todos os subscripts e utilizando um script principal para gerenciar esse fluxo. Foi assim que o VORTEX nasceu.
+No entanto, com a criação do script de coleta de dados, foi possível criar um fluxo interno de dados, unindo todos os subscripts e utilizando um script principal para gerenciar esse fluxo. Foi assim que o VORTEX nasceu.
 
 Os subscripts do VORTEX são:
 
