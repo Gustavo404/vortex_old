@@ -1,247 +1,247 @@
 #!/bin/bash
-
-# Load the vortex.sh script
+# este script faz parte do debug e depende do vortex (github) e shunit2 (apt) para funcionar
+# Carrega o script vortex.sh
 . vortex.sh
 
-# Test the color_message function
+# Testa a função color_message
 test_color_message() {
   local message=$(color_message "red" "This is a test message")
   assertEquals "\e[91mThis is a test message\e[0m" "$message"
 }
 
-# Test the coletar_dados function
+# Testa a função coletar_dados
 test_coletar_dados() {
-  # Simulate user input
+  # Simula a entrada do usuário
   echo "input.txt" | test_coletar_dados_input
   echo "192.168.0.1" | test_coletar_dados_input
   echo "user" | test_coletar_dados_input
   echo "password" | test_coletar_dados_input
 
-  # Call the function
+  # Chama a função
   coletar_dados
 
-  # Check the variables
+  # Verifica as variáveis
   assertEquals "input.txt" "$input"
   assertEquals "192.168.0.1" "$ip"
   assertEquals "user" "$user"
   assertEquals "password" "$pass"
 }
 
-# Helper function for test_coletar_dados
+# Função auxiliar para test_coletar_dados
 test_coletar_dados_input() {
   cat
 }
 
-# Test the processar_opcoes function
+# Testa a função processar_opcoes
 test_processar_opcoes() {
-  # Call the function with options
+  # Chama a função com opções
   processar_opcoes -i input.txt -s 192.168.0.1 -u user -p password
 
-  # Check the variables
+  # Verifica as variáveis
   assertEquals "input.txt" "$input"
   assertEquals "192.168.0.1" "$ip"
   assertEquals "user" "$user"
   assertEquals "password" "$pass"
 }
 
-# Test the verificar_variaveis function
+# Testa a função verificar_variaveis
 test_verificar_variaveis() {
-  # Set some variables
+  # Define algumas variáveis
   input="input.txt"
   ip="192.168.0.1"
   user="user"
   pass="password"
 
-  # Call the function with all variables set
+  # Chama a função com todas as variáveis definidas
   verificar_variaveis
 
-  # Check that the function does not exit
+  # Verifica que a função não sai
   assertEquals 0 $?
 
-  # Unset some variables
+  # Desdefine algumas variáveis
   unset input
   unset ip
 
-  # Call the function with unset variables
+  # Chama a função com variáveis não definidas
   verificar_variaveis
 
-  # Check that the function exits with an error
+  # Verifica que a função sai com erro
   assertEquals 1 $?
 }
 
-# Test the verificar_arquivo function
+# Testa a função verificar_arquivo
 test_verificar_arquivo() {
-  # Call the function with an existing file
+  # Chama a função com um arquivo existente
   verificar_arquivo input.txt
 
-  # Check that the function does not exit
+  # Verifica que a função não sai
   assertEquals 0 $?
 
-  # Call the function with a non-existing file
+  # Chama a função com um arquivo inexistente
   verificar_arquivo non_existing_file.txt
 
-  # Check that the function exits with an error
+  # Verifica que a função sai com erro
   assertEquals 1 $?
 }
 
-# Test the criar_pasta_saida function
+# Testa a função criar_pasta_saida
 test_criar_pasta_saida() {
-  # Call the function with a non-existing directory
+  # Chama a função com um diretório inexistente
   criar_pasta_saida
 
-  # Check that the directory was created
+  # Verifica que o diretório foi criado
   assertTrue "[ -d input ]"
 
-  # Call the function with an existing directory
+  # Chama a função com um diretório existente
   criar_pasta_saida
 
-  # Check that the directory was not created again
+  # Verifica que o diretório não foi criado novamente
   assertTrue "[ -d input ]"
 }
 
-# Test the verificar_padrao function
+# Testa a função verificar_padrao
 test_verificar_padrao() {
-  # Call the function with a file in the "1 2 3" format
+  # Chama a função com um arquivo no formato "1 2 3"
   input="input_1_2_3.txt"
   verificar_padrao
 
-  # Check that the file was converted and executed
+  # Verifica que o arquivo foi convertido e executado
   assertTrue "[ -f input_formatado.txt ]"
   assertTrue "[ -f input_telnet.txt ]"
   assertTrue "[ -f input_recv.txt ]"
 
-  # Call the function with a file in the "1/2/3" format
+  # Chama a função com um arquivo no formato "1/2/3"
   input="input_1_2_3_slash.txt"
   verificar_padrao
 
-  # Check that the file was converted and executed
+  # Verifica que o arquivo foi convertido e executado
   assertTrue "[ -f input_comandos.txt ]"
   assertTrue "[ -f input_recv.txt ]"
 
-  # Call the function with a file in an unknown format
+  # Chama a função com um arquivo em formato desconhecido
   input="input_unknown.txt"
   verificar_padrao
 
-  # Check that the function does not exit
+  # Verifica que a função não sai
   assertEquals 0 $?
 }
 
-# Test the converter_arquivo function
+# Testa a função converter_arquivo
 test_converter_arquivo() {
-  # Call the function with user input
+  # Chama a função com entrada do usuário
   echo "n" | test_converter_arquivo_input
   converter_arquivo
 
-  # Check that the file was not converted
+  # Verifica que o arquivo não foi convertido
   assertFalse "[ -f input_formatado.txt ]"
 
-  # Call the function with user input
+  # Chama a função com entrada do usuário
   echo "y" | test_converter_arquivo_input
   converter_arquivo
 
-  # Check that the file was converted
+  # Verifica que o arquivo foi convertido
   assertTrue "[ -f input_formatado.txt ]"
 }
 
-# Helper function for test_converter_arquivo
+# Função auxiliar para test_converter_arquivo
 test_converter_arquivo_input() {
   cat
 }
 
-# Test the converter_arquivo_telnet function
+# Testa a função converter_arquivo_telnet
 test_converter_arquivo_telnet() {
-  # Call the function with user input
+  # Chama a função com entrada do usuário
   echo "n" | test_converter_arquivo_telnet_input
   converter_arquivo_telnet
 
-  # Check that the file was not converted
+  # Verifica que o arquivo não foi convertido
   assertFalse "[ -f input_comandos.txt ]"
 
-  # Call the function with user input
+  # Chama a função com entrada do usuário
   echo "y" | test_converter_arquivo_telnet_input
   converter_arquivo_telnet
 
-  # Check that the file was converted
+  # Verifica que o arquivo foi convertido
   assertTrue "[ -f input_comandos.txt ]"
 }
 
-# Helper function for test_converter_arquivo_telnet
+# Função auxiliar para test_converter_arquivo_telnet
 test_converter_arquivo_telnet_input() {
   cat
 }
 
-# Test the executar_oxygen function
+# Testa a função executar_oxygen
 test_executar_oxygen() {
-  # Call the function with user input
+  # Chama a função com entrada do usuário
   echo "n" | test_executar_oxygen_input
   executar_oxygen
 
-  # Check that the function does not exit
+  # Verifica que a função não sai
   assertEquals 0 $?
 
-  # Call the function with user input
+  # Chama a função com entrada do usuário
   echo "y" | test_executar_oxygen_input
   executar_oxygen
 
-  # Check that the function does not exit
+  # Verifica que a função não sai
   assertEquals 0 $?
 }
 
-# Helper function for test_executar_oxygen
+# Função auxiliar para test_executar_oxygen
 test_executar_oxygen_input() {
   cat
 }
 
-# Test the filtrar_dados function
+# Testa a função filtrar_dados
 test_filtrar_dados() {
-  # Call the function
+  # Chama a função
   filtrar_dados
 
-  # Check that the files were filtered
+  # Verifica que os arquivos foram filtrados
   assertTrue "[ -f input_recv.txt ]"
   assertTrue "[ -f input_sinal.txt ]"
 }
 
-# Test the filtrar_dados_obsidian function
+# Testa a função filtrar_dados_obsidian
 test_filtrar_dados_obsidian() {
-  # Call the function with user input
+  # Chama a função com entrada do usuário
   echo "n" | test_filtrar_dados_obsidian_input
   filtrar_dados_obsidian
 
-  # Check that the function does not exit
+  # Verifica que a função não sai
   assertEquals 0 $?
 
-  # Call the function with user input
+  # Chama a função com entrada do usuário
   echo "y" | test_filtrar_dados_obsidian_input
   filtrar_dados_obsidian
 
-  # Check that the function does not exit
+  # Verifica que a função não sai
   assertEquals 0 $?
 }
 
-# Helper function for test_filtrar_dados_obsidian
+# Função auxiliar para test_filtrar_dados_obsidian
 test_filtrar_dados_obsidian_input() {
   cat
 }
 
-# Test the script
+# Testa o script
 test_script() {
-  # Call the script with no arguments
+  # Chama o script sem argumentos
   echo "input.txt" | test_coletar_dados_input
   echo "192.168.0.1" | test_coletar_dados_input
   echo "user" | test_coletar_dados_input
   echo "password" | test_coletar_dados_input
   bash vortex.sh
 
-  # Check that the script exits with success
+  # Verifica que o script sai com sucesso
   assertEquals 0 $?
 
-  # Call the script with options
+  # Chama o script com opções
   bash vortex.sh -i input.txt -s 192.168.0.1 -u user -p password
 
-  # Check that the script exits with success
+  # Verifica que o script sai com sucesso
   assertEquals 0 $?
 }
 
-# Load the shunit2 library
+# Carrega a biblioteca shunit2
 . shunit2
