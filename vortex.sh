@@ -175,7 +175,7 @@ filtrar_dados_obsidian() {
         echo
         color_message "red" "[!] ATENÇÃO: verifique se todas as colunas possuem o mesmo número de linhas!"
         sleep 0.4
-        color_message "yellow" "[!] Copie as 3 colunas e cole num arquivo em $current_dir"
+        color_message "yellow" "[!] Cole as 3 colunas num arquivo em $current_dir"
         color_message "yellow" "    (você precisará informar o nome do arquivo!)"
         echo
         for i in {5..0}; do
