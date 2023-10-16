@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Variaveis misselaneas
+# SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+dir_tsunami="../tsunami/tsunami.sh"
+dir_oxygen="../oxygen/oxygen.expect"
+dir_obsidian="../obsidian/obsidian.sh"
+
 # Função para mostrar mensagens coloridas
 function color_message() {
   local color=$1
@@ -27,8 +33,6 @@ function color_message() {
 coletar_dados() {
     color_message "yellow" "[?] Digite o nome do arquivo de entrada: "
     read input
-    color_message "yellow" "[?] Digite o nome do arquivo de saída: "
-    read output
     color_message "yellow" "[?] Digite o IP do servidor Telnet: "
     read ip
     color_message "yellow" "[?] Digite o usuário do servidor Telnet: "
@@ -39,12 +43,11 @@ coletar_dados() {
 
 # Função para processar as opções da linha de comando
 processar_opcoes() {
-    while getopts "i:u:p:s:o:" opt; do
+    while getopts "i:u:p:s:" opt; do
         case $opt in
             s) ip="$OPTARG" ;;
             u) user="$OPTARG" ;;
             i) input="$OPTARG" ;;
-            o) output="$OPTARG" ;;
             p) pass="$OPTARG" ;;
             \?)
                 color_message "red" "[!] Opção inválida: -$OPTARG" >&2
@@ -60,9 +63,32 @@ processar_opcoes() {
 
 # Função para verificar se todas as variáveis foram preenchidas
 verificar_variaveis() {
-    if [[ -z "$input" || -z "$output" || -z "$ip" || -z "$user" || -z "$pass" ]]; then
+    if [[ -z "$input" || -z "$ip" || -z "$user" || -z "$pass" ]]; then
         color_message "red" "[!] Alguma variável não foi preenchida"
         exit 1
+    fi
+}
+
+# Função para verificar se o arquivo de entrada existe
+verificar_arquivo() {
+    if [[ ! -f "$input" ]]; then
+        color_message "red" "[!] O arquivo $input não existe"
+        exit 1
+    fi
+}
+
+# Função para criar uma pasta de saída usando o nome do input a fim de organizar arquivos em multi processamentos
+criar_pasta_saida() {
+    input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
+    input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
+    # Verifica se o diretório existe
+    if [ -d "$input_sem_extensao" ]; then
+        cp $input "$input_sem_extensao"/
+        cd "$input_sem_extensao" || exit 1
+    else
+        mkdir "$input_sem_extensao"
+        cp $input "$input_sem_extensao"/
+        cd "$input_sem_extensao" || exit 1
     fi
 }
 
@@ -96,7 +122,7 @@ converter_arquivo() {
     color_message "yellow" "[?] Deseja converter $input de '1 2 3' para '1/2/3'? (S/n)"
     read resposta
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
-        bash tsunami/tsunami.sh -i "$input"
+        bash $dir_tsunami -i "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_formatado.txt"
@@ -109,7 +135,7 @@ converter_arquivo_telnet() {
     color_message "yellow" "[?] Deseja converter $input de '1/2/3' para comandos Telnet? (S/n)"
     read resposta
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
-        bash tsunami/tsunami.sh -t "$input"
+        bash $dir_tsunami -t "$input"
         input_sem_extensao=$(basename "$input" | cut -f 1 -d '_')
         input_sem_extensao=$(basename "$input_sem_extensao" | cut -f 1 -d '.')
         input="${input_sem_extensao}_comandos.txt"
@@ -119,17 +145,17 @@ converter_arquivo_telnet() {
 
 # Função para executar o Oxygen
 executar_oxygen() {
-    expect oxygen/oxygen.expect "$ip" "$user" "$pass" "$input" | tee "$input_sem_extensao"_telnet.txt
+    expect $dir_oxygen "$ip" "$user" "$pass" "$input" | tee "$input_sem_extensao"_telnet.txt
     grep -E 'RECV POWER   :|onu is in unactive!|\[ ERR ' "$input_sem_extensao"_telnet.txt > "$input_sem_extensao"_recv.txt
     echo
     color_message "green" "Oxygen executado com sucesso"
     echo
 }
 
-# Função para filtrar os dados com Obsidian e Tsunami
+# Função para filtrar os dados com Tsunami
 filtrar_dados() {
     color_message "yellow" "[!] Iniciando formatação dos dados com Tsunami"
-    bash tsunami/tsunami.sh -s "$input_sem_extensao"_recv.txt
+    bash $dir_tsunami -s "$input_sem_extensao"_recv.txt
     echo
 }
 
@@ -140,18 +166,16 @@ filtrar_dados_obsidian() {
     if [[ -z "$resposta" || "$resposta" =~ ^[SsYy]$ ]]; then
         clear
         echo
-        output_sem_extensao=$(basename "$output" | cut -f 1 -d '_')
-        output_sem_extensao=$(basename "$output_sem_extensao" | cut -f 1 -d '.')
         color_message "yellow" "[!] Abra a planilha da OLT e apague as colunas 'PLACA PON e ONU (2,3 e 4)'"
         sleep 0.2
         color_message "yellow" "[!] Copie \e[0m"$input_sem_extensao"_formatado.txt\e[93m e cole na \e[91msegunda\e[93m coluna da planilha."
         sleep 0.2
-        color_message "yellow" "[!] Copie \e[0m"$output_sem_extensao"_sinal.txt\e[93m e cole na \e[91mterceira\e[93m coluna da planilha."
+        color_message "yellow" "[!] Copie \e[0m"$input_sem_extensao"_sinal.txt\e[93m e cole na \e[91mterceira\e[93m coluna da planilha."
         sleep 0.2
         echo
         color_message "red" "[!] ATENÇÃO: verifique se todas as colunas possuem o mesmo número de linhas!"
         sleep 0.4
-        color_message "yellow" "[!] Copie as 3 colunas da planilha e cole num arquivo de texto"
+        color_message "yellow" "[!] Copie as 3 colunas e cole num arquivo em $current_dir"
         color_message "yellow" "    (você precisará informar o nome do arquivo!)"
         echo
         for i in {5..0}; do
@@ -161,7 +185,7 @@ filtrar_dados_obsidian() {
         echo && echo
         color_message "green" "[!] pressione enter para continuar"
         read
-        bash obsidian/obsidian.sh
+        bash $dir_obsidian
     fi
 }
 
@@ -172,17 +196,20 @@ else
     processar_opcoes "$@"
 fi
 
+# Banner
+clear
+cat .banner && echo
+current_dir=$(pwd)
+color_message "green" "[!] Diretório atual: $current_dir" && echo
 
 # Verificação de variáveis
-clear
 verificar_variaveis
+verificar_arquivo
+criar_pasta_saida
 
-# Banner
-cat .banner && echo
-
-# Conversão de quebra de linha para Unix + debug
+# Conversão de quebra de linha de Dos para Unix
 color_message "yellow" "[!] Convertendo quebra de linha para Unix..."
-dos2unix "$input"
+dos2unix "$input" 2> /dev/null
 echo
 
 # Verificação de padrão
