@@ -19,10 +19,8 @@ obsidian/
 oxygen/
 
 # Images
-*.jpg
 *.jpeg
 *.gif
-*.png
 *.svg
 *.ico
 *.bmp
