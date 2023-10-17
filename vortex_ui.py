@@ -9,7 +9,7 @@ window = tk.Tk()
 window.title("Vortex")
 
 # Set the window size and position
-window.geometry("880x515")
+window.geometry("780x510+300+100")
 window.eval('tk::PlaceWindow . center')
 
 # Load the logo image
@@ -50,16 +50,19 @@ browse_button.pack(pady=5)
 ip_label = tk.Label(frame, text="Endereço IP:")
 ip_label.pack(pady=5)
 ip_entry = tk.Entry(frame)
+ip_entry.insert(0, "10.10.100.")
 ip_entry.pack(pady=5)
 
 user_label = tk.Label(frame, text="Usuário:")
 user_label.pack(pady=5)
 user_entry = tk.Entry(frame)
+user_entry.insert(0, "GEPON")
 user_entry.pack(pady=5)
 
 pass_label = tk.Label(frame, text="Senha:")
 pass_label.pack(pady=5)
 pass_entry = tk.Entry(frame, show="*")
+pass_entry.insert(0, "J2g89@@dw*Lv")
 pass_entry.pack(pady=5)
 
 # Function to execute the script
@@ -72,7 +75,7 @@ def execute_script():
     # Convert the file path to a Unix-style path
     unix_path = "/mnt/" + input_file[0].lower() + input_file[2:].replace("\\", "/")
 
-    print(unix_path)  # Output: /mnt/c/Users/Direct/Documents/vortex
+    print(unix_path)  # Output: /mnt/c/Users/Direct/Documents/vortex/
 
     # Define the command string to execute
     command_string = f"bash vortex.sh -i '{unix_path}' -s '{telnet_ip}' -u '{telnet_user}' -p '{telnet_pass}'"

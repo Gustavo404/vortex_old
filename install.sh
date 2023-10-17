@@ -30,7 +30,8 @@ instalar_dependencias() {
   sleep 0.5
   color_message "blue" "Instalando pacotes necessários..."
   sleep 0.5
-  apt install expect git dos2unix -y > /dev/null 2>&1
+  apt update > /dev/null 2>&1
+  apt install expect git dos2unix telnet -y > /dev/null 2>&1
   color_message "green" "Pacotes instalados com sucesso!"
   sleep 0.5
   color_message "blue" "Clonando repositórios do GitHub..."
