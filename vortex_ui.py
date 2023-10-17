@@ -13,7 +13,7 @@ window.geometry("780x510+300+100")
 window.eval('tk::PlaceWindow . center')
 
 # Load the logo image
-logo_path = os.path.join(os.path.dirname(__file__), "vortex.png")
+logo_path = os.path.join(os.path.dirname(__file__), ".vortex.png")
 logo_image = Image.open(logo_path)
 logo_photo = ImageTk.PhotoImage(logo_image)
 
