@@ -1,3 +1,3 @@
 cd /d "%~dp0"
-python vortex_ui.py
+python ui.py
 exit
