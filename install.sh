@@ -44,7 +44,7 @@ instalar_dependencias() {
   sleep 0.5
   color_message "blue" "Convertendo arquivos para formato Unix..."
   sleep 0.5
-  # dos2unix * > /dev/null 2>&1
+  dos2unix * > /dev/null 2>&1
   color_message "green" "Arquivos convertidos com sucesso!"
   sleep 1
   color_message "green" "Instalação de dependências concluída com sucesso!"
@@ -87,6 +87,5 @@ while getopts "ir" opt; do
 done
 
 # Finalização do script
-clear
 color_message "green" "Script finalizado com sucesso!"
 sleep 1
