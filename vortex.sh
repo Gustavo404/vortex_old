@@ -64,7 +64,7 @@ processar_opcoes() {
 # Função para verificar se todas as variáveis foram preenchidas
 verificar_variaveis() {
     if [[ -z "$input" || -z "$ip" || -z "$user" || -z "$pass" ]]; then
-        color_message "red" "[!] Alguma variável não foi preenchida"
+        color_message "yellow" "[?] Uso: bash vision.sh -s SERVER_IP -u USER -i INPUT_FILE -p PASS"
         exit 1
     fi
 }
