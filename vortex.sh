@@ -51,10 +51,12 @@ processar_opcoes() {
             p) pass="$OPTARG" ;;
             \?)
                 color_message "red" "[!] Opção inválida: -$OPTARG" >&2
+                color_message "yellow" "[?] Uso: bash vision.sh -s SERVER_IP -u USER -i INPUT_FILE -p PASS"
                 exit 1
                 ;;
             :)
                 color_message "red" "[!] A opção -$OPTARG requer um argumento." >&2
+                color_message "yellow" "[?] Uso: bash vision.sh -s SERVER_IP -u USER -i INPUT_FILE -p PASS"
                 exit 1
                 ;;
         esac
