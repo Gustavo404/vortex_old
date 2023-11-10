@@ -3,7 +3,7 @@
 [![AWK 1.3.4](https://img.shields.io/badge/AWK-1.3.4-darkred)](https://packages.debian.org/stable/awk) 
 [![SED 4.9-1](https://img.shields.io/badge/SED-4.9.1-darkgreen)](https://packages.debian.org/stable/sed) 
 [![ShellScript Bash](https://img.shields.io/badge/ShellScript-Bash-blue)](https://packages.debian.org/stable/bash)
-[![ShellScript expect](https://img.shields.io/badge/ShellScript-Expect-darkred)](https://wiki.debian.org/Expect)
+[![ShellScript expect](https://img.shields.io/badge/Tcl-Expect-darkred)](https://wiki.debian.org/Expect)
 [![Licença](https://img.shields.io/badge/Licen%C3%A7a-GPL%202.0-yellow)](https://github.com/gustavo404/vortex/blob/main/LICENSE)
 [![Youtube](https://img.shields.io/badge/Youtube-Gustavo404-darkred.svg)](https://youtube.com/gustavo404)
 
