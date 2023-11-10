@@ -7,7 +7,7 @@
 [![Licença](https://img.shields.io/badge/Licen%C3%A7a-GPL%202.0-yellow)](https://github.com/gustavo404/vortex/blob/main/LICENSE)
 [![Youtube](https://img.shields.io/badge/Youtube-Gustavo404-darkred.svg)](https://youtube.com/gustavo404)
 
-<img src=".vortex.jpg" alt="Vortex Logo" width="520">
+<img src=".vortex.png" alt="Vortex Logo" width="520">
 
 # Visão Geral
 
