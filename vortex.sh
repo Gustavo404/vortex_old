@@ -200,7 +200,9 @@ fi
 
 # Banner
 clear
-cat .banner && echo
+cat .banner | lolcat
+echo
+
 current_dir=$(pwd)
 color_message "green" "[!] Diretório atual: $current_dir" && echo
 
